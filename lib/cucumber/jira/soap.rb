@@ -16,10 +16,10 @@ module Cucumber
         Cucumber::Jira.client.login(username, password)
       rescue Handsoap::Fault => e
         if prompt
-          puts 'Enter your username: '
-          username = $stdin.gets
+          print 'Enter your username: '
+          username = $stdin.gets.chomp
 
-          puts 'Enter your password: '
+          print 'Enter your password: '
           password = $stdin.noecho(&:gets).chomp
 
           Cucumber::Jira.client.login(username, password)
