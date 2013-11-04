@@ -29,22 +29,22 @@ module Cucumber
       end
 
       def search(query_hash)
-        query = query_hash[:project]
+        query = "Project = '#{query_hash[:project]}'"
 
         if query_hash[:themes]
-          query << " Theme = '"
+          query << " AND Theme = '"
           query << query_hash[:themes].join("' AND Theme = '")
           query << "'"
         end
 
-        query << " #{query_hash[:misc]}" if query_hash[:misc]
+        # query << " #{query_hash[:misc]}" if query_hash[:misc]
 
         Cucumber::Jira.client.issues_from_jql_search(query).map { |issue|
           {
             key:          issue.key,
             summary:      issue.summary,
             description:  issue.description,
-            fix_versions: issue.fix_versions,
+            fix_versions: issue.fix_versions.map(&:name),
             # TODO: Does customfield_10571 always map to the themes field?
             themes:       issue.custom_field_values.find { |field| field.id == 'customfield_10571' }.values
           }
